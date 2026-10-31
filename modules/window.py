@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QMainWindow, QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QComboBox
+from PyQt6.QtWidgets import QMainWindow, QFrame, QHBoxLayout, QPushButton,QComboBox,QTextEdit,QWidget
 from modules.app import app 
-
+import random
 window = QMainWindow()
 
 WINDOW_WIDTH = 1200
@@ -16,32 +16,58 @@ window.setGeometry(
     WINDOW_WIDTH, WINDOW_HEIGHT
 )
 
-main_layout = QVBoxLayout()
+def generate():
+    length = int(menu1.currentText())
+    choice = menu2.currentText()
+    if choice == "only numbers":
+        chars = "0123456789"
+    elif choice == "only letters":
+        chars = "abcdefghijklmnopqrstuvwxyz"
+    else:
+        chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+    password = ""
+    for i in range(length):
+        password += random.choice(chars)      
+    text1.setText(password)
 
-button1 = QPushButton(text="Press")
-button1.setFixedSize(100, 50)
-button1.setStyleSheet("border: 2px solid green")
+def clear():
+    text1.clear()
 
+
+main_layout = QHBoxLayout()
+frame_layout = QHBoxLayout()
 frame1 = QFrame()
-frame1.setStyleSheet("background-color: rgb(150, 150, 150)") 
-frame1.setFixedSize(600, 400)
+frame1.setStyleSheet("background-color: purple") 
 
-layout2 = QHBoxLayout()
+menu1 = QComboBox()
+menu1.addItems(["6", "8", "12","16","24"])
 
-menu = QComboBox()
-menu.addItems(["опція 1", "опція 2", "опція 3"])
+menu2 = QComboBox()
+menu2.addItems(["only numbers","both","only letters"])
 
-line1 = QLineEdit()
-line1.setPlaceholderText("Введіть текст")
+button1 = QPushButton(text="generate", parent= frame1)
+button1.setFixedSize(150, 60)
+button1.setStyleSheet("border: 1px solid black")
 
-layout2.addWidget(menu)
-layout2.addWidget(line1)
-frame1.setLayout(layout2)
+button2 = QPushButton(text = "clear", parent = frame1)
+button2.setFixedSize(150,60)
+button2.setStyleSheet("border :1px solid black")
 
-main_layout.addWidget(button1)
+button1.clicked.connect(generate)
+button2.clicked.connect(clear)
+
+text1 = QTextEdit()
+text1.setMaximumHeight(60)
+text1.setMaximumWidth(200)
+frame_layout.addWidget(menu1)
+frame_layout.addWidget(menu2)
+frame_layout.addWidget(button1)
+frame_layout.addWidget(text1)
+frame_layout.addWidget(button2)
+
 main_layout.addWidget(frame1)
 
-from PyQt6.QtWidgets import QWidget
+frame1.setLayout(frame_layout)
 central_widget = QWidget()
 central_widget.setLayout(main_layout)
 window.setCentralWidget(central_widget)
